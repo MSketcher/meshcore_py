@@ -167,6 +167,9 @@ class MeshCore:
         if result is None:
             await self.dispatcher.stop()
             raise ConnectionError("Failed to connect to device")
+        # ESP32/CH340 devices need time to stabilize after serial port opens
+        # (RTS pulse during open can cause brief reset)
+        await asyncio.sleep(0.5)
         await self.commands.send_device_query()  # Required by ESP32/CH340 devices
         return await self.commands.send_appstart()
 
