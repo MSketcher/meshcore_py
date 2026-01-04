@@ -56,13 +56,16 @@ class SerialConnection:
         Connects to the device
         """
         self._connected_event.clear()
-        
+
         loop = asyncio.get_running_loop()
+        # Pass rts=False and dtr=False to prevent ESP32/CH340 reset on connection open
         await serial_asyncio.create_serial_connection(
             loop,
             lambda: self.MCSerialClientProtocol(self),
             self.port,
             baudrate=self.baudrate,
+            rts=False,
+            dtr=False,
         )
 
         await self._connected_event.wait()
