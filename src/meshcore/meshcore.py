@@ -167,6 +167,7 @@ class MeshCore:
         if result is None:
             await self.dispatcher.stop()
             raise ConnectionError("Failed to connect to device")
+        await self.commands.send_device_query()  # Required by ESP32/CH340 devices
         return await self.commands.send_appstart()
 
     async def disconnect(self):
